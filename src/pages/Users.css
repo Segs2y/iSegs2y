@@ -1,0 +1,47 @@
+.users-page {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.users-page h1 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: white;
+}
+
+.user-info h3 {
+  margin: 0 0 5px;
+}
+
+.user-info a {
+  color: #222;
+  text-decoration: none;
+}
+
+.user-info a:hover {
+  text-decoration: underline;
+}
+
+.user-info p {
+  margin: 0;
+  color: #777;
+}
+
+.follow-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}

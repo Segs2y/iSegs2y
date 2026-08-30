@@ -1,0 +1,80 @@
+.post-card {
+  width: 100%;
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.post-card h3 {
+  margin-top: 0;
+}
+
+.post-content {
+  font-size: 17px;
+  margin: 20px 0;
+}
+
+.post-actions {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.post-actions button,
+.comment-form button,
+.delete-button {
+  padding: 7px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.comments {
+  margin-top: 15px;
+}
+
+.comment {
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.comment-form {
+  display: flex;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.comment-form input {
+  flex: 1;
+  padding: 9px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.post-author-email {
+  margin: 4px 0;
+  color: #777;
+  font-size: 13px;
+}
+
+.post-time {
+  color: #888;
+  font-size: 12px;
+  margin: 5px 0 15px;
+}
+
+.post-card h3 {
+  margin-bottom: 0;
+}
+
+.post-card h3 a {
+  color: #222;
+  text-decoration: none;
+}
+
+.post-card h3 a:hover {
+  text-decoration: underline;
+}

@@ -1,0 +1,264 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import PostCard from "../components/PostCard";
+import Navbar from "../components/Navbar";
+import CreatePost from "../components/CreatePost";
+
+function Home() {
+  const [user, setUser] = useState(null);
+  const [posts, setPosts] = useState([]);
+  const [commentText, setCommentText] = useState({});
+
+  const navigate = useNavigate();
+
+  const handleDeletePost = async (postId) => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/posts/${postId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log("Post deleted successfully");
+
+        setPosts((currentPosts) =>
+          currentPosts.filter((post) => post.id !== postId),
+        );
+      } else {
+        console.log(data.error);
+      }
+    } catch (error) {
+      console.error("Error deleting post:", error);
+    }
+  };
+
+  const handleLikePost = async (postId, likedByMe) => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/posts/${postId}/like`,
+        {
+          method: likedByMe ? "DELETE" : "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log(data.message);
+
+        setPosts((currentPosts) =>
+          currentPosts.map((post) =>
+            post.id === postId
+              ? {
+                  ...post,
+                  likedByMe: !likedByMe,
+                  _count: {
+                    ...post._count,
+                    likes: likedByMe
+                      ? post._count.likes - 1
+                      : post._count.likes + 1,
+                  },
+                }
+              : post,
+          ),
+        );
+      } else {
+        console.log(data.error);
+      }
+    } catch (error) {
+      console.error("Error liking/unliking post:", error);
+    }
+  };
+
+  const handleCreateComment = async (postId) => {
+    const token = localStorage.getItem("token");
+    const text = commentText[postId];
+
+    if (!text || text.trim() === "") {
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/posts/${postId}/comments`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            content: text,
+          }),
+        },
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log("Comment created successfully");
+
+        setPosts((currentPosts) =>
+          currentPosts.map((post) =>
+            post.id === postId
+              ? {
+                  ...post,
+                  comments: [...(post.comments || []), data.comment],
+                }
+              : post,
+          ),
+        );
+
+        setCommentText((currentComments) => ({
+          ...currentComments,
+          [postId]: "",
+        }));
+      } else {
+        console.log(data.error);
+      }
+    } catch (error) {
+      console.error("Error creating comment:", error);
+    }
+  };
+
+  const handleDeleteComment = async (commentId, postId) => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/comments/${commentId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log("Comment deleted successfully");
+
+        setPosts((currentPosts) =>
+          currentPosts.map((post) =>
+            post.id === postId
+              ? {
+                  ...post,
+                  comments: post.comments.filter(
+                    (comment) => comment.id !== commentId,
+                  ),
+                }
+              : post,
+          ),
+        );
+      } else {
+        console.log(data.error);
+      }
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+    }
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
+    fetch("http://localhost:5000/api/auth/me", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setUser(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching user:", error);
+      });
+
+    fetch("http://localhost:5000/api/posts", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then(async (data) => {
+        const postsWithComments = await Promise.all(
+          data.map(async (post) => {
+            const commentsResponse = await fetch(
+              `http://localhost:5000/api/posts/${post.id}/comments`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              },
+            );
+
+            const comments = await commentsResponse.json();
+
+            return {
+              ...post,
+              comments,
+            };
+          }),
+        );
+
+        setPosts(postsWithComments);
+      })
+      .catch((error) => {
+        console.error("Error fetching posts:", error);
+      });
+  }, []);
+
+  return (
+    <div>
+      <Navbar />
+      <h1>Instagram</h1>
+      {user ? <p>Welcome, {user.username}! 👋</p> : <p>Loading...</p>}
+
+      <CreatePost
+        onPostCreated={(newPost) => {
+          setPosts((currentPosts) => [newPost, ...currentPosts]);
+        }}
+      />
+      <div>
+        <div>
+          {posts.map((post) => (
+            <PostCard
+              key={post.id}
+              post={post}
+              user={user}
+              commentText={commentText}
+              setCommentText={setCommentText}
+              handleLikePost={handleLikePost}
+              handleDeletePost={handleDeletePost}
+              handleCreateComment={handleCreateComment}
+              handleDeleteComment={handleDeleteComment}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default Home;
