@@ -3,11 +3,13 @@ import { useNavigate } from "react-router-dom";
 import PostCard from "../components/PostCard";
 import Navbar from "../components/Navbar";
 import CreatePost from "../components/CreatePost";
+import "./Home.css";
 
 function Home() {
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
   const [commentText, setCommentText] = useState({});
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
 
@@ -182,6 +184,8 @@ function Home() {
       return;
     }
 
+    setLoading(true);
+
     fetch("http://localhost:5000/api/auth/me", {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -223,38 +227,55 @@ function Home() {
         );
 
         setPosts(postsWithComments);
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching posts:", error);
+        setLoading(false);
       });
-  }, []);
+  }, [navigate]);
 
   return (
-    <div>
+    <div className="home-page">
       <Navbar />
-      <h1>Instagram</h1>
-      {user ? <p>Welcome, {user.username}! 👋</p> : <p>Loading...</p>}
+      <div className="home-container">
+        {user && (
+          <div className="welcome-section">
+            <h1>Welcome, {user.username}! 👋</h1>
+            <p>Share your moments with the world</p>
+          </div>
+        )}
 
-      <CreatePost
-        onPostCreated={(newPost) => {
-          setPosts((currentPosts) => [newPost, ...currentPosts]);
-        }}
-      />
-      <div>
-        <div>
-          {posts.map((post) => (
-            <PostCard
-              key={post.id}
-              post={post}
-              user={user}
-              commentText={commentText}
-              setCommentText={setCommentText}
-              handleLikePost={handleLikePost}
-              handleDeletePost={handleDeletePost}
-              handleCreateComment={handleCreateComment}
-              handleDeleteComment={handleDeleteComment}
-            />
-          ))}
+        <CreatePost
+          onPostCreated={(newPost) => {
+            setPosts((currentPosts) => [newPost, ...currentPosts]);
+          }}
+        />
+
+        <div className="posts-feed">
+          {loading ? (
+            <div className="empty-feed">
+              <p>Loading posts...</p>
+            </div>
+          ) : posts.length === 0 ? (
+            <div className="empty-feed">
+              <p>No posts yet. Follow users to see their posts! 📝</p>
+            </div>
+          ) : (
+            posts.map((post) => (
+              <PostCard
+                key={post.id}
+                post={post}
+                user={user}
+                commentText={commentText}
+                setCommentText={setCommentText}
+                handleLikePost={handleLikePost}
+                handleDeletePost={handleDeletePost}
+                handleCreateComment={handleCreateComment}
+                handleDeleteComment={handleDeleteComment}
+              />
+            ))
+          )}
         </div>
       </div>
     </div>

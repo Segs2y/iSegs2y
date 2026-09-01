@@ -6,9 +6,34 @@ import jwt from "jsonwebtoken";
 import { PrismaClient } from "./generated/prisma/client.ts";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { authMiddleware } from "./middleware/authMiddleware.js";
+import multer from "multer";
+import path from "path";
 
 const app = express();
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
 
+  filename: function (req, file, cb) {
+    const uniqueName = Date.now() + "-" + file.originalname;
+    cb(null, uniqueName);
+  },
+});
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024,
+  },
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith("image/")) {
+      cb(null, true);
+    } else {
+      cb(new Error("Only image files are allowed"));
+    }
+  },
+});
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL,
 });
@@ -19,6 +44,7 @@ const prisma = new PrismaClient({
 
 app.use(cors());
 app.use(express.json());
+app.use("/uploads", express.static("uploads"));
 
 
 // ========================================
@@ -100,6 +126,67 @@ app.post("/api/auth/login", async (req, res) => {
 
 
 // ========================================
+// AUTH - REGISTER
+// ========================================
+
+app.post("/api/auth/register", async (req, res) => {
+  try {
+    const { username, email, password } = req.body;
+
+    if (!username || !email || !password) {
+      return res.status(400).json({
+        error: "Username, email, and password are required",
+      });
+    }
+
+    // Check if user already exists
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { email },
+          { username }
+        ]
+      }
+    });
+
+    if (existingUser) {
+      return res.status(400).json({
+        error: "Email or username already exists",
+      });
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create user
+    const user = await prisma.user.create({
+      data: {
+        username,
+        email,
+        password: hashedPassword,
+      },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+      },
+    });
+
+    res.status(201).json({
+      message: "User registered successfully",
+      user,
+    });
+  } catch (error) {
+    console.error("Registration error:", error);
+
+    res.status(500).json({
+      error: "Something went wrong",
+    });
+  }
+});
+
+
+// ========================================
 // AUTH - CURRENT USER
 // ========================================
 
@@ -133,6 +220,83 @@ app.get("/api/auth/me", authMiddleware, async (req, res) => {
   }
 });
 
+app.post(
+  "/api/users/profile-image",
+  authMiddleware,
+  upload.single("profileImage"),
+  async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({
+          error: "No image uploaded",
+        });
+      }
+
+      const imageUrl = `http://localhost:5000/uploads/${req.file.filename}`;
+
+      const user = await prisma.user.update({
+        where: {
+          id: req.user.userId,
+        },
+        data: {
+          profileImage: imageUrl,
+        },
+        select: {
+          id: true,
+          username: true,
+          email: true,
+          profileImage: true,
+        },
+      });
+
+      res.json({
+        message: "Profile image uploaded successfully",
+        user,
+      });
+    } catch (error) {
+      console.error("Error uploading profile image:", error);
+
+      res.status(500).json({
+        error: "Could not upload profile image",
+      });
+    }
+  },
+);
+
+app.delete(
+  "/api/users/profile-image",
+  authMiddleware,
+  async (req, res) => {
+    try {
+      const user = await prisma.user.update({
+        where: {
+          id: req.user.userId,
+        },
+        data: {
+          profileImage: null,
+        },
+        select: {
+          id: true,
+          username: true,
+          email: true,
+          profileImage: true,
+        },
+      });
+
+      res.json({
+        message: "Profile image removed successfully",
+        user,
+      });
+    } catch (error) {
+      console.error("Error removing profile image:", error);
+
+      res.status(500).json({
+        error: "Could not remove profile image",
+      });
+    }
+  },
+);
+
 
 // ========================================
 // USERS
@@ -145,6 +309,14 @@ app.get("/api/users", authMiddleware, async (req, res) => {
         id: true,
         username: true,
         email: true,
+        profileImage: true,
+        _count: {
+          select: {
+            followers: true,
+            following: true,
+            posts: true,
+          },
+        },
       },
     });
 
@@ -161,6 +333,7 @@ app.get("/api/users", authMiddleware, async (req, res) => {
 app.get("/api/users/:id", authMiddleware, async (req, res) => {
   try {
     const userId = Number(req.params.id);
+    const currentUserId = req.user.userId;
 
     const user = await prisma.user.findUnique({
       where: {
@@ -170,6 +343,15 @@ app.get("/api/users/:id", authMiddleware, async (req, res) => {
         id: true,
         username: true,
         email: true,
+        profileImage: true,
+        createdAt: true,
+        _count: {
+          select: {
+            posts: true,
+            followers: true,
+            following: true,
+          },
+        },
       },
     });
 
@@ -179,7 +361,20 @@ app.get("/api/users/:id", authMiddleware, async (req, res) => {
       });
     }
 
-    res.json(user);
+    // Check if current user follows this user
+    const isFollowing = await prisma.follow.findUnique({
+      where: {
+        followerId_followingId: {
+          followerId: currentUserId,
+          followingId: userId,
+        },
+      },
+    });
+
+    res.json({
+      ...user,
+      isFollowing: !!isFollowing,
+    });
   } catch (error) {
     console.error("Error fetching user:", error);
 

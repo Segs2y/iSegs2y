@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
+import "./Followers.css";
 
 function Followers() {
   const { id } = useParams();
@@ -30,23 +32,32 @@ function Followers() {
   }, [id, navigate]);
 
   return (
-    <div>
-      <h1>Followers</h1>
+    <>
+      <Navbar />
+      <div className="followers-page">
+        <h1>Followers</h1>
 
-      {followers.length === 0 ? (
-        <p>This user has no followers yet.</p>
-      ) : (
-        followers.map((follow) => (
-          <div key={follow.id}>
-            <Link to={`/users/${follow.follower.id}`}>
-              <h3>{follow.follower.username}</h3>
-            </Link>
-
-            <p>{follow.follower.email}</p>
+        {followers.length === 0 ? (
+          <p className="empty-message">This user has no followers yet.</p>
+        ) : (
+          <div className="followers-list">
+            {followers.map((follow) => (
+              <div className="follower-card" key={follow.id}>
+                <div className="follower-info">
+                  <Link to={`/users/${follow.follower.id}`}>
+                    <h3>{follow.follower.username}</h3>
+                  </Link>
+                  <p>{follow.follower.email}</p>
+                </div>
+                <Link to={`/users/${follow.follower.id}`} className="view-btn">
+                  View Profile
+                </Link>
+              </div>
+            ))}
           </div>
-        ))
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 }
 

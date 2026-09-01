@@ -1,28 +1,91 @@
+/* Create Post Form */
 .create-post {
-  width: 100%;
-  max-width: 500px;
-  margin: 20px auto;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  box-sizing: border-box;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
 }
 
+.create-post:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.create-post:focus-within {
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.2);
+  border-top: 3px solid #667eea;
+}
+
+/* Textarea */
 .create-post textarea {
   width: 100%;
-  min-height: 100px;
-  padding: 12px;
-  box-sizing: border-box;
-  border: 1px solid #ccc;
+  padding: 12px 14px;
+  border: 2px solid #e0e0e0;
   border-radius: 8px;
-  resize: vertical;
   font-size: 15px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  resize: vertical;
+  min-height: 100px;
+  max-height: 200px;
+  transition: all 0.3s ease;
+  color: #333;
 }
 
+.create-post textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 12px rgba(102, 126, 234, 0.2);
+}
+
+.create-post textarea::placeholder {
+  color: #999;
+}
+
+/* Submit Button */
 .create-post button {
-  margin-top: 10px;
-  padding: 10px 16px;
+  width: 100%;
+  padding: 12px;
+  margin-top: 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.create-post button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.create-post button:active {
+  transform: translateY(0);
+}
+
+.create-post button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .create-post {
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+
+  .create-post textarea {
+    min-height: 80px;
+    font-size: 14px;
+    padding: 10px 12px;
+  }
+
+  .create-post button {
+    padding: 10px;
+    font-size: 14px;
+  }
 }

@@ -1,13 +1,18 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./Login.css";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
 
     try {
       const response = await fetch("http://localhost:5000/api/auth/login", {
@@ -25,46 +30,71 @@ function Login() {
 
       if (response.ok) {
         console.log("Login successful");
-
         localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
         navigate("/");
       } else {
-        console.log(data.error);
+        setError(data.error || "Login failed");
       }
     } catch (error) {
       console.error("Error logging in:", error);
+      setError("Could not connect to the server.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div>
-      <h1>Login to your Instagram account</h1>
-
-      <form onSubmit={handleLogin}>
-        <div>
-          <label htmlFor="email">Email:</label>
-
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+    <div className="auth-container">
+      <div className="auth-box">
+        <div className="auth-header">
+          <h1>📸 Instagram Clone</h1>
+          <p>Welcome Back!</p>
         </div>
 
-        <div>
-          <label htmlFor="password">Password:</label>
+        {error && <div className="error-message">{error}</div>}
 
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+        <form onSubmit={handleLogin} className="auth-form">
+          <div className="form-group">
+            <label htmlFor="email">Email Address</label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+
+          <button type="submit" className="submit-btn" disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
+          </button>
+        </form>
+
+        <div className="auth-footer">
+          <p>Don't have an account?</p>
+          <button
+            type="button"
+            className="link-btn"
+            onClick={() => navigate("/register")}
+          >
+            Create One Now
+          </button>
         </div>
-
-        <button type="submit">Login</button>
-      </form>
+      </div>
     </div>
   );
 }

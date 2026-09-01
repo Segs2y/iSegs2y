@@ -1,4 +1,4 @@
-.users-page {
+.followers-page {
   background: white;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -7,81 +7,92 @@
   margin: 20px auto;
 }
 
-.users-page h1 {
+.followers-page h1 {
   text-align: center;
   color: #667eea;
   margin-bottom: 30px;
   font-size: 28px;
 }
 
-/* User Card */
-.user-card {
+.empty-message {
+  text-align: center;
+  color: #999;
+  padding: 40px 20px;
+  font-size: 16px;
+}
+
+.followers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.follower-card {
   display: flex;
   align-items: center;
   justify-content: space-between;
   background: #f9f9f9;
   padding: 15px;
   border-radius: 8px;
-  margin-bottom: 15px;
   border-left: 4px solid #667eea;
   transition: all 0.3s ease;
 }
 
-.user-card:hover {
+.follower-card:hover {
   background: #f0f0f0;
   transform: translateX(5px);
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
 }
 
-/* User Info */
-.user-info {
+.follower-info {
   flex: 1;
 }
 
-.user-info h3 {
+.follower-info h3 {
   color: #667eea;
-  margin-bottom: 5px;
-  font-size: 18px;
+  margin: 0 0 5px 0;
+  font-size: 16px;
 }
 
-.user-info p {
+.follower-info a {
+  text-decoration: none;
+}
+
+.follower-info p {
   color: #999;
   font-size: 13px;
   margin: 0;
 }
 
-/* Follow Button */
-.user-card button {
+.view-btn {
   padding: 8px 16px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  border: none;
   border-radius: 6px;
-  cursor: pointer;
   font-weight: 600;
   white-space: nowrap;
-  transition: all 0.3s ease;
   margin-left: 10px;
+  display: inline-block;
+  transition: all 0.3s ease;
 }
 
-.user-card button:hover {
+.view-btn:hover {
   transform: scale(1.05);
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
-/* Mobile Responsive */
 @media (max-width: 768px) {
-  .users-page {
+  .followers-page {
     padding: 20px 15px;
   }
 
-  .user-card {
+  .follower-card {
     flex-direction: column;
     text-align: center;
     gap: 10px;
   }
 
-  .user-card button {
+  .view-btn {
     width: 100%;
     margin-left: 0;
   }
