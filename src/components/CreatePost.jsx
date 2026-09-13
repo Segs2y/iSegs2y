@@ -1,4 +1,5 @@
 import { useState } from "react";
+import API_BASE_URL from "../config";
 import "./CreatePost.css";
 
 function CreatePost({ onPostCreated }) {
@@ -14,7 +15,7 @@ function CreatePost({ onPostCreated }) {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/posts", {
+      const response = await fetch(`${API_BASE_URL}/api/posts`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

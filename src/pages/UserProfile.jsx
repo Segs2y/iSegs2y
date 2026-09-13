@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import API_BASE_URL from "../config";
 import "./UserProfile.css";
 
 function UserProfile() {
@@ -24,35 +25,29 @@ function UserProfile() {
 
       try {
         // 1. Get the currently logged-in user
-        const currentUserResponse = await fetch(
-          "http://localhost:5000/api/auth/me",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+        const currentUserResponse = await fetch(`${API_BASE_URL}/api/auth/me`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
-        );
+        });
 
         const currentUser = await currentUserResponse.json();
 
         setCurrentUserId(currentUser.id);
 
         // 2. Get the profile we are viewing
-        const userResponse = await fetch(
-          `http://localhost:5000/api/users/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+        const userResponse = await fetch(`${API_BASE_URL}/api/users/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
-        );
+        });
 
         const userData = await userResponse.json();
 
         setUser(userData);
 
         // 3. Get all posts
-        const postsResponse = await fetch("http://localhost:5000/api/posts", {
+        const postsResponse = await fetch(`${API_BASE_URL}/api/posts`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -68,7 +63,7 @@ function UserProfile() {
 
         // 4. Get this user's followers
         const followersResponse = await fetch(
-          `http://localhost:5000/api/users/${id}/followers`,
+          `${API_BASE_URL}/api/users/${id}/followers`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -82,7 +77,7 @@ function UserProfile() {
 
         // 5. Get this user's following
         const followingResponse = await fetch(
-          `http://localhost:5000/api/users/${id}/following`,
+          `${API_BASE_URL}/api/users/${id}/following`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -97,7 +92,7 @@ function UserProfile() {
         // 6. Check whether I already follow this user
         if (currentUser.id !== Number(id)) {
           const myFollowingResponse = await fetch(
-            `http://localhost:5000/api/users/${currentUser.id}/following`,
+            `${API_BASE_URL}/api/users/${currentUser.id}/following`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -125,15 +120,12 @@ function UserProfile() {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/users/${id}/follow`,
-        {
-          method: isFollowing ? "DELETE" : "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      const response = await fetch(`${API_BASE_URL}/api/users/${id}/follow`, {
+        method: isFollowing ? "DELETE" : "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
 
       const data = await response.json();
 

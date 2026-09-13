@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import API_BASE_URL from "../config";
 import "./Profile.css";
 
 function Profile() {
@@ -21,7 +22,7 @@ function Profile() {
     }
 
     // Get logged-in user
-    fetch("http://localhost:5000/api/auth/me", {
+    fetch(`${API_BASE_URL}/api/auth/me`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -35,7 +36,7 @@ function Profile() {
       });
 
     // Get posts
-    fetch("http://localhost:5000/api/posts", {
+    fetch(`${API_BASE_URL}/api/posts`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -58,7 +59,7 @@ function Profile() {
     const token = localStorage.getItem("token");
 
     // Get followers
-    fetch(`http://localhost:5000/api/users/${user.id}/followers`, {
+    fetch(`${API_BASE_URL}/api/users/${user.id}/followers`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -72,7 +73,7 @@ function Profile() {
       });
 
     // Get following
-    fetch(`http://localhost:5000/api/users/${user.id}/following`, {
+    fetch(`${API_BASE_URL}/api/users/${user.id}/following`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -133,7 +134,7 @@ function Profile() {
 
           try {
             const response = await fetch(
-              "http://localhost:5000/api/users/profile-image",
+              `${API_BASE_URL}/api/users/profile-image`,
               {
                 method: "POST",
                 headers: {

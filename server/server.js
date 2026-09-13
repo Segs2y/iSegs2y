@@ -10,6 +10,8 @@ import multer from "multer";
 import path from "path";
 
 const app = express();
+const PORT = Number(process.env.PORT) || 5000;
+const PUBLIC_URL = process.env.PUBLIC_URL || `http://localhost:${PORT}`;
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "uploads/");
@@ -42,7 +44,7 @@ const prisma = new PrismaClient({
   adapter,
 });
 
-app.use(cors());
+app.use(cors({ origin: true }));
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 
@@ -232,7 +234,7 @@ app.post(
         });
       }
 
-      const imageUrl = `http://localhost:5000/uploads/${req.file.filename}`;
+      const imageUrl = `${PUBLIC_URL}/uploads/${req.file.filename}`;
 
       const user = await prisma.user.update({
         where: {
@@ -961,6 +963,6 @@ app.get("/api/users/:id/following", authMiddleware, async (req, res) => {
 // START SERVER
 // ========================================
 
-app.listen(5000, () => {
-  console.log("Server running on http://localhost:5000");
+app.listen(PORT, () => {
+  console.log(`Server running on ${PUBLIC_URL}`);
 });

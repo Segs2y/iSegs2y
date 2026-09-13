@@ -1,6 +1,7 @@
 import "./Navbar.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import API_BASE_URL from "../config";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ function Navbar() {
       return;
     }
 
-    fetch("http://localhost:5000/api/users", {
+    fetch(`${API_BASE_URL}/api/users`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

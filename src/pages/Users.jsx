@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import API_BASE_URL from "../config";
 import "./Users.css";
 
 function Users() {
@@ -19,7 +20,7 @@ function Users() {
     }
 
     // Get the currently logged-in user
-    fetch("http://localhost:5000/api/auth/me", {
+    fetch(`${API_BASE_URL}/api/auth/me`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -33,7 +34,7 @@ function Users() {
       });
 
     // Get all users
-    fetch("http://localhost:5000/api/users", {
+    fetch(`${API_BASE_URL}/api/users`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -55,7 +56,7 @@ function Users() {
 
     const token = localStorage.getItem("token");
 
-    fetch(`http://localhost:5000/api/users/${user.id}/following`, {
+    fetch(`${API_BASE_URL}/api/users/${user.id}/following`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -75,7 +76,7 @@ function Users() {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/users/${userId}/follow`,
+        `${API_BASE_URL}/api/users/${userId}/follow`,
         {
           method: "POST",
           headers: {
@@ -111,7 +112,7 @@ function Users() {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/users/${userId}/follow`,
+        `${API_BASE_URL}/api/users/${userId}/follow`,
         {
           method: "DELETE",
           headers: {

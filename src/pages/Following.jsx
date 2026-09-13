@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import API_BASE_URL from "../config";
 import "./Following.css";
 
 function Following() {
@@ -17,7 +18,7 @@ function Following() {
       return;
     }
 
-    fetch(`http://localhost:5000/api/users/${id}/following`, {
+    fetch(`${API_BASE_URL}/api/users/${id}/following`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

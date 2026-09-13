@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import PostCard from "../components/PostCard";
 import Navbar from "../components/Navbar";
 import CreatePost from "../components/CreatePost";
+import API_BASE_URL from "../config";
 import "./Home.css";
 
 function Home() {
@@ -17,15 +18,12 @@ function Home() {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/posts/${postId}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      const response = await fetch(`${API_BASE_URL}/api/posts/${postId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
 
       const data = await response.json();
 
@@ -47,15 +45,12 @@ function Home() {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/posts/${postId}/like`,
-        {
-          method: likedByMe ? "DELETE" : "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      const response = await fetch(`${API_BASE_URL}/api/posts/${postId}/like`, {
+        method: likedByMe ? "DELETE" : "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
 
       const data = await response.json();
 
@@ -96,7 +91,7 @@ function Home() {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/posts/${postId}/comments`,
+        `${API_BASE_URL}/api/posts/${postId}/comments`,
         {
           method: "POST",
           headers: {
@@ -142,7 +137,7 @@ function Home() {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/comments/${commentId}`,
+        `${API_BASE_URL}/api/comments/${commentId}`,
         {
           method: "DELETE",
           headers: {
@@ -186,7 +181,7 @@ function Home() {
 
     setLoading(true);
 
-    fetch("http://localhost:5000/api/auth/me", {
+    fetch(`${API_BASE_URL}/api/auth/me`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -199,7 +194,7 @@ function Home() {
         console.error("Error fetching user:", error);
       });
 
-    fetch("http://localhost:5000/api/posts", {
+    fetch(`${API_BASE_URL}/api/posts`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -209,7 +204,7 @@ function Home() {
         const postsWithComments = await Promise.all(
           data.map(async (post) => {
             const commentsResponse = await fetch(
-              `http://localhost:5000/api/posts/${post.id}/comments`,
+              `${API_BASE_URL}/api/posts/${post.id}/comments`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`,
