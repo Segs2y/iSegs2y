@@ -1,4 +1,4 @@
-# 🚀 Instagram Clone - Quick Reference Card
+# 🚀 iSegs - Quick Reference Card
 
 ## Essential Commands
 

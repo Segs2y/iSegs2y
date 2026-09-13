@@ -1,4 +1,4 @@
-# 📸 Instagram Clone
+# 📸 iSegs
 
 A full-stack social media application inspired by Instagram, built with modern web technologies to demonstrate complete CRUD operations, authentication, and real-time interactions.
 
@@ -100,7 +100,7 @@ DELETE /api/users/profile-image  - Remove profile picture
 ## 🗂️ Project Structure
 
 ```
-instagram-clone/
+iSegs/
 ├── server/                    # Backend (Node.js + Express)
 │   ├── server.js             # Main server file with all routes
 │   ├── middleware/           # Auth middleware
@@ -301,7 +301,7 @@ This project is open source and available for personal and educational use.
 **[Start Now →](SETUP_GUIDE.md)**
 
 ```text
-instagram-clone/
+iSegs/
 │
 ├── public/
 ├── src/
@@ -329,13 +329,13 @@ instagram-clone/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/Segs2y/instagram-clone.git
+git clone https://github.com/Segs2y/iSegs.git
 ```
 
 ### 2. Move into the project
 
 ```bash
-cd instagram-clone
+cd iSegs
 ```
 
 ### 3. Install frontend dependencies

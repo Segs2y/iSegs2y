@@ -1,8 +1,8 @@
-# Instagram Clone - Complete Setup & Running Guide
+# iSegs - Complete Setup & Running Guide
 
 ## Project Overview
 
-This is a full-stack Instagram clone built with:
+This is a full-stack social media application built with:
 
 - **Frontend**: React 19 + Vite + React Router
 - **Backend**: Express.js + Node.js
@@ -118,7 +118,7 @@ VITE v8.x.x  ready in xxx ms
 4. Fill in username, email, and password
 5. Click "Sign Up" and you'll be redirected to login
 6. Log in with your new credentials
-7. Start using Instagram Clone! 🎉
+7. Start using iSegs! 🎉
 
 ---
 
@@ -317,7 +317,7 @@ npx tailwindcss init -p
 ## File Structure
 
 ```
-instagram-clone/
+iSegs/
 ├── server/                 # Backend (Express)
 │   ├── server.js          # Main server file
 │   ├── middleware/        # Auth middleware

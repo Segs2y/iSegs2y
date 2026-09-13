@@ -1,4 +1,4 @@
-# Instagram Clone - Development Summary
+# iSegs - Development Summary
 
 ## What Has Been Completed ✅
 
@@ -153,7 +153,7 @@ app.get("/api/users/:id", authMiddleware, async (req, res) => {
 ## File Structure Summary
 
 ```
-instagram-clone/
+iSegs/
 ├── SETUP_GUIDE.md              ← NEW! Complete setup instructions
 ├── DEVELOPMENT_SUMMARY.md      ← This file
 ├── server/
@@ -376,7 +376,7 @@ See `SETUP_GUIDE.md` for detailed setup with troubleshooting
 4. Invite others to test social features
 5. Deploy to production when ready
 
-**Enjoy your Instagram Clone! 🎉**
+**Enjoy iSegs! 🎉**
 
 ---
 

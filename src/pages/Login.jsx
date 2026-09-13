@@ -49,7 +49,7 @@ function Login() {
     <div className="auth-container">
       <div className="auth-box">
         <div className="auth-header">
-          <h1>📸 Instagram Clone</h1>
+          <h1>📸 iSegs</h1>
           <p>Welcome Back!</p>
         </div>
 

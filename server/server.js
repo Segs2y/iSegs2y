@@ -55,7 +55,7 @@ app.use("/uploads", express.static("uploads"));
 
 app.get("/", (req, res) => {
   res.json({
-    message: "Instagram Clone API is running 🚀",
+    message: "iSegs API is running 🚀",
   });
 });
 
