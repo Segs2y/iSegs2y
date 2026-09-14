@@ -272,9 +272,11 @@ npm run dev -- --port 5174
 
 1. Set strong `JWT_SECRET` in `.env`
 2. Set `NODE_ENV=production`
-3. Build frontend: `npm run build`
-4. Use a proper database (RDS, Managed PostgreSQL)
-5. Set up environment variables on your hosting platform
+3. Set `PUBLIC_URL` to the public backend URL
+4. Set the frontend build variable `VITE_API_URL` to that same backend URL when frontend and backend use different hosts
+5. Build frontend: `npm run build`
+6. Use a proper database (RDS, Managed PostgreSQL)
+7. Set up environment variables on your hosting platform
 
 ### Deployment Platforms:
 

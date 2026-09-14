@@ -179,8 +179,6 @@ function Home() {
       return;
     }
 
-    setLoading(true);
-
     fetch(`${API_BASE_URL}/api/auth/me`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -201,6 +199,10 @@ function Home() {
     })
       .then((response) => response.json())
       .then(async (data) => {
+        if (!Array.isArray(data)) {
+          throw new Error(data.error || "Could not fetch posts");
+        }
+
         const postsWithComments = await Promise.all(
           data.map(async (post) => {
             const commentsResponse = await fetch(
@@ -212,11 +214,11 @@ function Home() {
               },
             );
 
-            const comments = await commentsResponse.json();
+            const commentsData = await commentsResponse.json();
 
             return {
               ...post,
-              comments,
+              comments: Array.isArray(commentsData) ? commentsData : [],
             };
           }),
         );

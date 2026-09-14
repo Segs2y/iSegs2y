@@ -41,7 +41,7 @@ function Users() {
     })
       .then((response) => response.json())
       .then((data) => {
-        setUsers(data);
+        setUsers(Array.isArray(data) ? data : []);
       })
       .catch((error) => {
         console.error("Error fetching users:", error);
@@ -63,7 +63,7 @@ function Users() {
     })
       .then((response) => response.json())
       .then((data) => {
-        setFollowing(data);
+        setFollowing(Array.isArray(data) ? data : []);
       })
       .catch((error) => {
         console.error("Error fetching following:", error);

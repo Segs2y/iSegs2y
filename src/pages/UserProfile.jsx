@@ -55,7 +55,7 @@ function UserProfile() {
 
         const postsData = await postsResponse.json();
 
-        const userPosts = postsData.filter(
+        const userPosts = (Array.isArray(postsData) ? postsData : []).filter(
           (post) => post.userId === Number(id),
         );
 
@@ -73,7 +73,7 @@ function UserProfile() {
 
         const followersData = await followersResponse.json();
 
-        setFollowers(followersData);
+        setFollowers(Array.isArray(followersData) ? followersData : []);
 
         // 5. Get this user's following
         const followingResponse = await fetch(
@@ -87,7 +87,7 @@ function UserProfile() {
 
         const followingData = await followingResponse.json();
 
-        setFollowing(followingData);
+        setFollowing(Array.isArray(followingData) ? followingData : []);
 
         // 6. Check whether I already follow this user
         if (currentUser.id !== Number(id)) {
@@ -102,9 +102,9 @@ function UserProfile() {
 
           const myFollowingData = await myFollowingResponse.json();
 
-          const alreadyFollowing = myFollowingData.some(
-            (follow) => follow.following.id === Number(id),
-          );
+          const alreadyFollowing = (
+            Array.isArray(myFollowingData) ? myFollowingData : []
+          ).some((follow) => follow.following.id === Number(id));
 
           setIsFollowing(alreadyFollowing);
         }

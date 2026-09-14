@@ -25,7 +25,7 @@ function Followers() {
     })
       .then((response) => response.json())
       .then((data) => {
-        setFollowers(data);
+        setFollowers(Array.isArray(data) ? data : []);
       })
       .catch((error) => {
         console.error("Error fetching followers:", error);

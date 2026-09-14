@@ -43,7 +43,7 @@ function Profile() {
     })
       .then((response) => response.json())
       .then((data) => {
-        setPosts(data);
+        setPosts(Array.isArray(data) ? data : []);
       })
       .catch((error) => {
         console.error("Error fetching posts:", error);

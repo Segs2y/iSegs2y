@@ -7,10 +7,9 @@ import { PrismaClient } from "./generated/prisma/client.ts";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { authMiddleware } from "./middleware/authMiddleware.js";
 import multer from "multer";
-import path from "path";
 
 const app = express();
-const PORT = Number(process.env.PORT) || 5000;
+const PORT = Number(process.env.PORT || process.env.SERVER_PORT) || 5000;
 const PUBLIC_URL = process.env.PUBLIC_URL || `http://localhost:${PORT}`;
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {

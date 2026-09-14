@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import Home from "./pages/Home.jsx";
@@ -20,6 +20,7 @@ function App() {
         <Route path="/users/:id" element={<UserProfile />} />
         <Route path="/users/:id/followers" element={<Followers />} />
         <Route path="/users/:id/following" element={<Following />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
   );
